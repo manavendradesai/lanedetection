@@ -3,15 +3,6 @@
 from multiprocessing.connection import wait
 import cv2 as cv
 import numpy as np
-import time
-
-# #For grass
-# H_low = 0
-# H_high = 129
-# S_low = 0
-# S_high = 19
-# V_low = 0
-# V_high = 255
 
 #For road
 H_low = 0
@@ -21,18 +12,11 @@ S_high = 0
 V_low = 150
 V_high = 255
 
-#cap = cv.VideoCapture(0)
-#cap = cv.VideoCapture('test1.mov')
-#cap = cv.VideoCapture('test3.mov')
-cap = cv.VideoCapture('test4.mov')
-#cap = cv.VideoCapture('test5.mov')
-#cap = cv.VideoCapture('ActualCourseLinesGrass.mov')
+cap = cv.VideoCapture(0)
 
 ########## Detect lanes
 
 while(1):
-
-    # time.sleep(0.05)
 
     #Take each frame
     ret, frame = cap.read()
@@ -77,25 +61,6 @@ while(1):
     cdstP = frame.copy()
     #Coarse filtering
     linesP = cv.HoughLinesP(mask_open, 3, 1*np.pi/180, 100, None, 50, 50)
-
-    # # #Filter pixels using lines
-    # # mask_endpoints = mask_open.copy()
-    # # mask_endpoints[0:h,0:w] = 0
-
-    # if linesP is not None:
-    #     for i in range(0, len(linesP)):
-    #         l = linesP[i][0]
-    #         #Set endpoints to white
-    #         mask_endpoints[l[1], l[0]] = 255
-    #         mask_endpoints[l[3], l[2]] = 255
-
-    # #Repeat. Fine filtering
-    # # linesP = cv.HoughLinesP(mask_endpoints, 1, 1*np.pi/180, 1, None, 1, 1)
-    # #print('Second filter', 2*len(linesP))
-
-    #Filter pixels using lines
-    # mask_endpoints = mask_open.copy()
-    # mask_endpoints[0:h,0:w] = 0
     
     #Array of lane pixels
     R = np.empty(1,np.int16)
@@ -104,17 +69,8 @@ while(1):
     if linesP is not None:
         for i in range(0, len(linesP)):
             l = linesP[i][0]
-            # cv.line(cdstP, (l[0], l[1]), (l[0], l[1]), (0,0,255), 5, cv.LINE_AA)
-            # cv.line(cdstP, (l[2], l[3]), (l[2], l[3]), (0,0,255), 5, cv.LINE_AA)
-            # #Set endpoints to white
-            # mask_endpoints[l[1], l[0]] = 255
-            # mask_endpoints[l[3], l[2]] = 255
             R = np.append(R,[l[1],l[3]])
             C = np.append(C,[l[0],l[2]])
-
-    # R, C = np.where(mask_open==255)
-    # print('Rows:', R)
-    # print('Columns:',C)
 
     #Remove random integer in first index
         R = np.delete(R,0)
@@ -260,19 +216,8 @@ while(1):
     cv.namedWindow('Original frame', cv.WINDOW_NORMAL)
     cv.imshow('Original frame',frame)
 
-# #     #cv.namedWindow('Endpoints',cv.WINDOW_NORMAL)
-# #     #cv.imshow('Endpoints',cdstP)
-
-#     # cv.namedWindow('Endpoints mask', cv.WINDOW_NORMAL)
-#     # cv.imshow('Endpoints mask',mask_endpoints)
-
     cv.namedWindow('Clusters', cv.WINDOW_NORMAL)
     cv.imshow('Clusters',frame_cluster)
-
-#     cv.namedWindow('Mask',cv.WINDOW_NORMAL)
-#     cv.imshow('Mask',mask_open)
-
-    
 
     cv.waitKey(2)
 
