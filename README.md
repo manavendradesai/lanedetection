@@ -9,3 +9,6 @@ Detect lanes and potholes using OpenCV tools. Fit straight lines over lanes dete
 
 
 ![](https://github.com/manavendradesai/lanedetection/blob/main/lane_fit_results/lane_detect_and_fit_3.png)
+
+
+![](https://github.com/manavendradesai/lanedetection/blob/main/pot_hole_results/pothole_detect_1.png)
